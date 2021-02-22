@@ -1,5 +1,6 @@
 {
   "name": "macintoshplus/behat-lambdatest-extension",
+  "license": "MIT",
   "description": "Extends the Selenium2 Extension to use Lambdatest browser. Service provider https://lambdatest.com",
   "keywords":     ["selenium", "webdriver", "javascript", "ajax", "testing", "browser", "lambdatest"],
   "authors": [
