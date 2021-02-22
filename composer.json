@@ -1,0 +1,23 @@
+{
+  "name": "macintoshplus/behat-lambdatest-extension",
+  "description": "Extends the Selenium2 Extension to use Lambdatest browser. Service provider https://lambdatest.com",
+  "keywords":     ["selenium", "webdriver", "javascript", "ajax", "testing", "browser", "lambdatest"],
+  "authors": [
+    {
+      "email": "contact@nahan.fr",
+      "name": "macintoshplus",
+      "homepage": "https://nahan.fr",
+      "role": "owner"
+    }
+  ],
+  "require": {
+    "behat/mink-selenium2-driver": "^1.0",
+    "behat/mink-extension": "^2.3",
+    "behat/behat": "^3.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Macintoshplus\\Lambdatest\\": "src/"
+    }
+  }
+}
