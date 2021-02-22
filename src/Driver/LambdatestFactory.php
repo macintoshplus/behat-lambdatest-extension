@@ -33,7 +33,7 @@ final class LambdatestFactory extends Selenium2Factory
     public function buildDriver(array $config)
     {
         $envValues = getenv();
-        if (($config['user'] === null || $config['key'] === null) && (!isset($envValues['LT_USERNAME']) || !isset($envValues['LT_USERKEY']))) {
+        if ((!isset($config['user']) || !isset($config['key'])) && (!isset($envValues['LT_USERNAME']) || !isset($envValues['LT_USERKEY']))) {
             throw new \Exception('Configure environment variable LT_USERNAME and LT_USERKEY with credential from Lambdatest');
         }
 
