@@ -18,6 +18,8 @@
     }
   ],
   "require": {
+    "php": "^7.0",
+    "ext-json": "*",
     "behat/mink-selenium2-driver": "^1.0||^2.0.x-dev",
     "silverstripe/mink-facebook-web-driver": "1.x-dev",
     "behat/mink-extension": "^2.0",
@@ -27,5 +29,8 @@
     "psr-4": {
       "Macintoshplus\\Lambdatest\\": "src/"
     }
+  },
+  "config": {
+    "sort-packages": true
   }
 }
