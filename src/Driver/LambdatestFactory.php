@@ -2,7 +2,6 @@
 
 namespace Macintoshplus\Lambdatest\Driver;
 
-use Behat\MinkExtension\ServiceContainer\Driver\Selenium2Factory;
 use Macintoshplus\Lambdatest\Exception\LambdatestServiceException;
 use Macintoshplus\Lambdatest\Exception\TooManyParallelExecutionException;
 use SilverStripe\MinkFacebookWebDriver\FacebookFactory;
@@ -53,16 +52,15 @@ final class LambdatestFactory extends FacebookFactory
 
         //Example : {"data":{"created":0,"max_concurrency":1,"max_queue":150,"pqueued":0,"queued":0,"running":0},"status":"success"}
         $data = json_decode($result, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new LambdatestServiceException('JSON Error on decode Lambdatest response : ' . json_last_error() . ' ' . json_last_error_msg());
+        if (json_last_error() !== \JSON_ERROR_NONE) {
+            throw new LambdatestServiceException('JSON Error on decode Lambdatest response : '.json_last_error().' '.json_last_error_msg());
         }
         if (isset($data['data']) === false || isset($data['data']['max_concurrency']) === false || isset($data['data']['running']) === false) {
             throw new LambdatestServiceException('Concurency response is a valid JSON but does not contrains expected keys');
         }
 
-        if (intval($data['data']['max_concurrency']) <= intval($data['data']['running'])) {
-            throw new TooManyParallelExecutionException(sprintf('Unable to launch anothe parallel automation test. max concurency: %s, current running test: %s',
-                $data['data']['max_concurrency'], $data['data']['running']));
+        if ((int) ($data['data']['max_concurrency']) <= (int) ($data['data']['running'])) {
+            throw new TooManyParallelExecutionException(sprintf('Unable to launch anothe parallel automation test. max concurency: %s, current running test: %s', $data['data']['max_concurrency'], $data['data']['running']));
         }
 
         return parent::buildDriver($config);
