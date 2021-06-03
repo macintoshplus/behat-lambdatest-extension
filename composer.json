@@ -11,8 +11,17 @@
       "role": "owner"
     }
   ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/jbcr/MinkFacebookWebDriver.git"
+    }
+  ],
   "require": {
+    "php": "^7.0",
+    "ext-json": "*",
     "behat/mink-selenium2-driver": "^1.0||^2.0.x-dev",
+    "silverstripe/mink-facebook-web-driver": "1.x-dev",
     "behat/mink-extension": "^2.0",
     "behat/behat": "^3.0"
   },
@@ -20,5 +29,8 @@
     "psr-4": {
       "Macintoshplus\\Lambdatest\\": "src/"
     }
+  },
+  "config": {
+    "sort-packages": true
   }
 }
