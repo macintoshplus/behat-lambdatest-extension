@@ -2,6 +2,7 @@
 
 namespace Macintoshplus\Lambdatest\Driver;
 
+use Facebook\WebDriver\Remote\WebDriverBrowserType;
 use Macintoshplus\Lambdatest\Exception\LambdatestServiceException;
 use Macintoshplus\Lambdatest\Exception\TooManyParallelExecutionException;
 use SilverStripe\MinkFacebookWebDriver\FacebookFactory;
@@ -53,7 +54,7 @@ final class LambdatestFactory extends FacebookFactory
         //Example : {"data":{"created":0,"max_concurrency":1,"max_queue":150,"pqueued":0,"queued":0,"running":0},"status":"success"}
         $data = json_decode($result, true);
         if (json_last_error() !== \JSON_ERROR_NONE) {
-            throw new LambdatestServiceException('JSON Error on decode Lambdatest response : '.json_last_error().' '.json_last_error_msg());
+            throw new LambdatestServiceException('JSON Error on decode Lambdatest response : '.json_last_error().' '.json_last_error_msg().' Content: '.$result);
         }
         if (isset($data['data']) === false || isset($data['data']['max_concurrency']) === false || isset($data['data']['running']) === false) {
             throw new LambdatestServiceException('Concurency response is a valid JSON but does not contrains expected keys');
@@ -63,8 +64,29 @@ final class LambdatestFactory extends FacebookFactory
             throw new TooManyParallelExecutionException(sprintf('Unable to launch anothe parallel automation test. max concurency: %s, current running test: %s', $data['data']['max_concurrency'], $data['data']['running']));
         }
 
+        $browser = $config['browser'];
+        $extraCapabilities = $config['capabilities']['extra_capabilities'];
+        $chromeW3c = isset($extraCapabilities['chromeOptions']) === true && isset($extraCapabilities['chromeOptions']['w3c']) === true ? $extraCapabilities['chromeOptions']['w3c'] : null;
+
         $def = parent::buildDriver($config);
         $def->setClass(LambdatestWebDriver::class);
+        $capabilities = $def->getArgument(1);
+
+        //Remove w3c option is no Chrome browser
+        if ($browser !== WebDriverBrowserType::CHROME && isset($capabilities['chromeOptions']) === true && isset($capabilities['chromeOptions']['w3c']) === true) {
+            unset($capabilities['chromeOptions']['w3c']);
+        }
+
+        //Restore w3c chromeOption value if defined in configuration
+        if ($browser === WebDriverBrowserType::CHROME &&
+            isset($capabilities['chromeOptions']) === true &&
+            isset($capabilities['chromeOptions']['w3c']) === true &&
+            $chromeW3c !== null &&
+            $capabilities['chromeOptions']['w3c'] !== $chromeW3c) {
+            $capabilities['chromeOptions']['w3c'] = $chromeW3c;
+        }
+
+        $def->setArgument(1, $capabilities);
 
         return $def;
     }
