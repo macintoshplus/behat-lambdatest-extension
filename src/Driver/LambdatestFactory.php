@@ -63,6 +63,9 @@ final class LambdatestFactory extends FacebookFactory
             throw new TooManyParallelExecutionException(sprintf('Unable to launch anothe parallel automation test. max concurency: %s, current running test: %s', $data['data']['max_concurrency'], $data['data']['running']));
         }
 
-        return parent::buildDriver($config);
+        $def = parent::buildDriver($config);
+        $def->setClass(LambdatestWebDriver::class);
+
+        return $def;
     }
 }
