@@ -81,9 +81,13 @@ final class LambdatestFactory extends FacebookFactory
         if ($browser === WebDriverBrowserType::CHROME &&
             isset($capabilities['chromeOptions']) === true &&
             isset($capabilities['chromeOptions']['w3c']) === true &&
-            $chromeW3c !== null &&
             $capabilities['chromeOptions']['w3c'] !== $chromeW3c) {
+            //Restore the configuration value
             $capabilities['chromeOptions']['w3c'] = $chromeW3c;
+            //If no option in behat configuration, remove option
+            if ($chromeW3c === null) {
+                unset($capabilities['chromeOptions']['w3c']);
+            }
         }
 
         $def->setArgument(1, $capabilities);
