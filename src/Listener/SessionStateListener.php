@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Macintoshplus\Lambdatest\Listener;
 
 use Behat\Mink\Mink;
+use Behat\Testwork\EventDispatcher\Event\AfterExerciseAborted;
 use Behat\Testwork\EventDispatcher\Event\AfterExerciseCompleted;
 use Behat\Testwork\EventDispatcher\Event\ExerciseCompleted;
 use Macintoshplus\Lambdatest\Driver\LambdatestWebDriver;
@@ -43,11 +44,19 @@ final class SessionStateListener implements EventSubscriberInterface
         ];
     }
 
-    /*
-     * Define the session test state for all lambdatest session
+    /**
+     * Define the session test state for all lambdatest session.
+     *
+     * @param \Behat\Testwork\EventDispatcher\Event\AfterExerciseAborted|\Behat\Testwork\EventDispatcher\Event\AfterExerciseCompleted $event
      */
-    public function tearDownMinkSessions(AfterExerciseCompleted $event)
+    public function tearDownMinkSessions($event)
     {
+        if (
+            $event instanceof AfterExerciseCompleted === false &&
+            $event instanceof AfterExerciseAborted === false
+        ) {
+            return;
+        }
         foreach ($this->javascriptsSessions as $sessionName) {
             if ($this->mink->hasSession($sessionName) === false) {
                 continue;

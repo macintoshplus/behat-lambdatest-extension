@@ -2,6 +2,11 @@
 
 This Behat extension provide a Mink Selenium2 Extension integration for [Lambdatest SaaS](https://lambdatest.com).
 
+Tested browser :
+
+* Firefox 88+
+* Chrome 90+
+* Safari 13+
 
 ## Installation
 
