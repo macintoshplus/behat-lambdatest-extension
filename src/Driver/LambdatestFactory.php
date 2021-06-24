@@ -90,6 +90,10 @@ final class LambdatestFactory extends FacebookFactory
             }
         }
 
+        if (\array_key_exists('chromeOptions', $capabilities) && \count($capabilities['chromeOptions']) === 0) {
+            unset($capabilities['chromeOptions']);
+        }
+
         $def->setArgument(1, $capabilities);
 
         return $def;
