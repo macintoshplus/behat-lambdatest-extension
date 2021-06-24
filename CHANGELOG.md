@@ -2,6 +2,7 @@
 
 * Remove force W3c option for chrome because Lambdatest does not support: ` Could not open connection: w3c is not a valid option in chromeOptions capability, please refer to capability generator https://www.lambdatest.com/capabilities-generator or contact support` (2021, 24 june).
 * Accept two event type on SessionStateListener.
+* Remove `chromeOptions` array if empty.
 
 # Version 1.2.1
 
