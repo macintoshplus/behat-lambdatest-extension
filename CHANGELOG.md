@@ -1,3 +1,7 @@
+# Version 1.2.3
+
+* Add support `isVisible` on element for Safari (not supported by SafaWebDriver) [W3C WebDriver displayedness](https://w3c.github.io/webdriver/#element-displayedness) [Apple Safari WebDriver supported commands](https://developer.apple.com/documentation/webkit/macos_webdriver_commands_for_safari_12_and_later)
+
 # Version 1.2.2
 
 * Remove force W3c option for chrome because Lambdatest does not support: ` Could not open connection: w3c is not a valid option in chromeOptions capability, please refer to capability generator https://www.lambdatest.com/capabilities-generator or contact support` (2021, 24 june).
