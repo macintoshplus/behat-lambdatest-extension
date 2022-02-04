@@ -1,29 +1,36 @@
 <?php
 
-return PhpCsFixer\Config::create()
+$finder = PhpCsFixer\Finder::create()
+    ->in('src')
+    ->files()->name('*.php');
+
+$config = new PhpCsFixer\Config();
+$config
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PSR2' => true,
+        '@PSR12' => true,
         'array_syntax' => [
-            'syntax' => 'short'
+            'syntax' => 'short',
         ],
         'combine_consecutive_unsets' => true,
         'native_function_invocation' => [
             'include' => [
-                '@compiler_optimized'
-            ]
+                '@compiler_optimized',
+            ],
         ],
         'no_extra_blank_lines' => [
-            'break',
-            'continue',
-            'extra',
-            'return',
-            'throw',
-            'use',
-            'parenthesis_brace_block',
-            'square_brace_block',
-            'curly_brace_block',
+            'tokens' => [
+                'break',
+                'continue',
+                'extra',
+                'return',
+                'throw',
+                'use',
+                'parenthesis_brace_block',
+                'square_brace_block',
+                'curly_brace_block',
+            ],
         ],
         'yoda_style' => [
             'always_move_variable' => false,
@@ -36,8 +43,7 @@ return PhpCsFixer\Config::create()
     ])
     ->setRiskyAllowed(true)
     ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in('src')
-            ->files()->name('*.php')
-    )
-;
+        $finder
+    );
+
+return $config;
