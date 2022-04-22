@@ -45,6 +45,12 @@ default:
             platform: windows10
             browserName: firefox
             version: latest
+            
+            # If you need select file to upload in your tests
+            # Upload the files before run test. See: https://www.lambdatest.com/support/docs/upload-files-using-lambdatest/
+            # Define below all files names needed in your test.
+            'lambda:userFiles': [file_name_uploaded_to_lamdatest.zip, file_2.zip]
+            
             #If you need use the Lambdatest tunnel
             tunnel: true
             tunnelName: test_tunnel
