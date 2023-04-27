@@ -27,6 +27,12 @@ final class SessionStateListener implements EventSubscriberInterface
     /** @var string[] */
     private $javascriptsSessions;
 
+    /** @var array<string> */
+    private $originalTags = [];
+
+    /** @var string|null */
+    private $originalName = null;
+
     /**
      * SessionStateListener constructor.
      *
@@ -79,14 +85,21 @@ final class SessionStateListener implements EventSubscriberInterface
         if ($driver === null || $driver->isSplitVideo() === false) {
             return;
         }
-        $tags = $driver->getDesiredCapabilities()->getCapability('tags');
-        foreach ($event->getScenario()->getTags() as $tag) {
-            $tags[] = $tag;
+        if (empty($this->originalTags)) {
+            $this->originalTags = $driver->getDesiredCapabilities()->getCapability('tags');
         }
-        $tags = array_unique($tags);
+        if (empty($this->originalName)) {
+            $this->originalName = $driver->getDesiredCapabilities()->getCapability('name');
+        }
 
-        $driver->getDesiredCapabilities()->setCapability('tags', $tags);
-        $driver->getDesiredCapabilities()->setCapability('name', 'Behat: '.$event->getScenario()->getTitle());
+        $driver->getDesiredCapabilities()->setCapability(
+            'tags',
+            array_unique(array_merge($this->originalTags, $event->getScenario()->getTags()))
+        );
+        $driver->getDesiredCapabilities()->setCapability(
+            'name',
+            $this->originalName.' '.$event->getScenario()->getTitle()
+        );
         $driver->start();
     }
 
