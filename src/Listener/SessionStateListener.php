@@ -52,7 +52,7 @@ final class SessionStateListener implements EventSubscriberInterface
     /**
      * Define the session test state for all lambdatest session.
      *
-     * @param \Behat\Testwork\EventDispatcher\Event\AfterExerciseAborted|\Behat\Testwork\EventDispatcher\Event\AfterExerciseCompleted $event
+     * @param AfterExerciseAborted|AfterExerciseCompleted $event
      */
     public function tearDownMinkSessions($event)
     {
@@ -63,10 +63,14 @@ final class SessionStateListener implements EventSubscriberInterface
             return;
         }
         $driver = $this->getMinkLambdatestSession();
-        if ($driver === null) {
+        if ($driver === null || $driver->getWebDriver() === null || $driver->isStarted() === false) {
             return;
         }
-        $driver->executeScript('lambda-status='.($event->getTestResult()->isPassed() ? 'passed' : 'failed'));
+        $driver->executeScript(
+            'lambda-status='.(
+                ($event instanceof AfterExerciseCompleted && $event->getTestResult()->isPassed()) ? 'passed' : 'failed'
+            )
+        );
     }
 
     public function beforeScenario(BeforeScenarioTested $event): void
@@ -89,7 +93,7 @@ final class SessionStateListener implements EventSubscriberInterface
     public function afterScenario(AfterScenarioTested $event): void
     {
         $driver = $this->getMinkLambdatestSession();
-        if ($driver === null || $driver->isSplitVideo() === false) {
+        if ($driver === null || $driver->getWebDriver() === null || $driver->isSplitVideo() === false) {
             return;
         }
         $driver->executeScript('lambda-status='.($event->getTestResult()->isPassed() ? 'passed' : 'failed'));

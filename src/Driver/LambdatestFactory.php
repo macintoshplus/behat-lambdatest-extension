@@ -95,6 +95,10 @@ final class LambdatestFactory extends FacebookFactory
         if (\array_key_exists('chromeOptions', $capabilities) && \count($capabilities['chromeOptions']) === 0) {
             unset($capabilities['chromeOptions']);
         }
+        // Fix Lambdatest 2023-04-27, `acceptInsecureCerts` must be user if used in `capabilities.firstMatch`
+        if (isset($capabilities['acceptSslCerts'])) {
+            $capabilities['acceptInsecureCerts'] = $capabilities['acceptSslCerts'];
+        }
 
         $def->setArgument(1, $capabilities);
 
