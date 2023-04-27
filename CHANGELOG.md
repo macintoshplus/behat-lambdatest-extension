@@ -1,3 +1,7 @@
+# Version 1.3.0
+
+* Add a feature to run each scenario in separate execution on LambdaTest. Generate one video by scenario.
+
 # Version 1.2.3
 
 * Add support `isVisible` on element for Safari (not supported by SafaWebDriver) [W3C WebDriver displayedness](https://w3c.github.io/webdriver/#element-displayedness) [Apple Safari WebDriver supported commands](https://developer.apple.com/documentation/webkit/macos_webdriver_commands_for_safari_12_and_later)

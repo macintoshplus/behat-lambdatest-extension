@@ -27,6 +27,7 @@ final class LambdatestFactory extends FacebookFactory
         $builder->children()
             ->scalarNode('user')->end()
             ->scalarNode('key')->end()
+            ->booleanNode('split_video')->defaultFalse()->end()
             ->end();
         parent::configure($builder);
     }
@@ -51,7 +52,7 @@ final class LambdatestFactory extends FacebookFactory
         $url = sprintf('https://%s:%s@api.lambdatest.com/automation/api/v1/org/concurrency', $user, $key);
         list($result, $infos) = $curl->execute('GET', $url);
 
-        //Example : {"data":{"created":0,"max_concurrency":1,"max_queue":150,"pqueued":0,"queued":0,"running":0},"status":"success"}
+        // Example : {"data":{"created":0,"max_concurrency":1,"max_queue":150,"pqueued":0,"queued":0,"running":0},"status":"success"}
         $data = json_decode($result, true);
         if (json_last_error() !== \JSON_ERROR_NONE) {
             throw new LambdatestServiceException('JSON Error on decode Lambdatest response : '.json_last_error().' '.json_last_error_msg().' Content: '.$result);
@@ -60,7 +61,7 @@ final class LambdatestFactory extends FacebookFactory
             throw new LambdatestServiceException('Concurency response is a valid JSON but does not contrains expected keys');
         }
 
-        if ((int) ($data['data']['max_concurrency']) <= (int) ($data['data']['running'])) {
+        if ((int) $data['data']['max_concurrency'] <= (int) $data['data']['running']) {
             throw new TooManyParallelExecutionException(sprintf('Unable to launch anothe parallel automation test. max concurency: %s, current running test: %s', $data['data']['max_concurrency'], $data['data']['running']));
         }
 
@@ -70,21 +71,22 @@ final class LambdatestFactory extends FacebookFactory
 
         $def = parent::buildDriver($config);
         $def->setClass(LambdatestWebDriver::class);
+        $def->setArgument(3, $config['split_video']);
         $capabilities = $def->getArgument(1);
 
-        //Remove w3c option is no Chrome browser
+        // Remove w3c option is no Chrome browser
         if ($browser !== WebDriverBrowserType::CHROME && isset($capabilities['chromeOptions']) === true && isset($capabilities['chromeOptions']['w3c']) === true) {
             unset($capabilities['chromeOptions']['w3c']);
         }
 
-        //Restore w3c chromeOption value if defined in configuration
+        // Restore w3c chromeOption value if defined in configuration
         if ($browser === WebDriverBrowserType::CHROME &&
             isset($capabilities['chromeOptions']) === true &&
             isset($capabilities['chromeOptions']['w3c']) === true &&
             $capabilities['chromeOptions']['w3c'] !== $chromeW3c) {
-            //Restore the configuration value
+            // Restore the configuration value
             $capabilities['chromeOptions']['w3c'] = $chromeW3c;
-            //If no option in behat configuration, remove option
+            // If no option in behat configuration, remove option
             if ($chromeW3c === null) {
                 unset($capabilities['chromeOptions']['w3c']);
             }
