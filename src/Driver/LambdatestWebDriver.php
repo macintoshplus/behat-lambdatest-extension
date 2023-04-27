@@ -81,8 +81,10 @@ final class LambdatestWebDriver extends \SilverStripe\MinkFacebookWebDriver\Face
     public function isVisible($xpath)
     {
         // Fix to mitigate the unsupported `displayed` command https://w3c.github.io/webdriver/#element-displayedness
-        if (strtolower($this->getDesiredCapabilities()->getBrowserName()) === 'safari') {
-            return $this->evaluateScript('(function (){ let x =  document.evaluate("'.$xpath."\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; if(x === null) {return false;} return window.getComputedStyle(x).display !== 'none';})();");
+        if ($this->isStarted() && strtolower($this->getDesiredCapabilities()->getBrowserName()) === 'safari') {
+            return $this->evaluateScript(
+                '(function (){ let x =  document.evaluate("'.$xpath."\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; if(x === null) {return false;} return window.getComputedStyle(x).display !== 'none';})();"
+            );
         }
 
         return parent::isVisible($xpath);

@@ -39,22 +39,25 @@ default:
           split_video: false #If false, run all scenario in one session. If true, close and open a new session for each scenario
           # The rest of key are the same as Mink Extension
           wd_host: https://hub.lambdatest.com/wd/hub # The URL of Selenium2 Hub
-          browser: firefox # The browser name
-          marionette: true
-          extra_capabilities:
-            resolution: 1920x1080
-            platform: windows10
-            browserName: firefox
-            version: latest
-            
-            # If you need select file to upload in your tests
-            # Upload the files before run test. See: https://www.lambdatest.com/support/docs/upload-files-using-lambdatest/
-            # Define below all files names needed in your test.
-            'lambda:userFiles': [file_name_uploaded_to_lamdatest.zip, file_2.zip]
-            
-            #If you need use the Lambdatest tunnel
-            tunnel: true
-            tunnelName: test_tunnel
+          capabilities:
+              name: Behat test suite # Define the name to change the Lambdatest session name or prefix if `split_video` is true
+              # The rest of key are the same as Mink Extension
+              browser: firefox # The browser name
+              marionette: true
+              extra_capabilities:
+                resolution: 1920x1080
+                platform: windows10
+                browserName: firefox
+                version: latest
+
+                # If you need select file to upload in your tests
+                # Upload the files before run test. See: https://www.lambdatest.com/support/docs/upload-files-using-lambdatest/
+                # Define below all files names needed in your test.
+                'lambda:userFiles': [file_name_uploaded_to_lamdatest.zip, file_2.zip]
+
+                #If you need use the Lambdatest tunnel
+                tunnel: true
+                tunnelName: test_tunnel
 ```
 
 See this [documentation](https://www.lambdatest.com/support/docs/selenium-automation-capabilities/) to customize your capabilities configuration.
