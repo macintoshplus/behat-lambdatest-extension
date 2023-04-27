@@ -20,6 +20,23 @@ final class LambdatestWebDriver extends \SilverStripe\MinkFacebookWebDriver\Face
 
     private $started = false;
 
+    private bool $splitVideo;
+
+    public function __construct(
+        $browserName = self::DEFAULT_BROWSER,
+        $desiredCapabilities = [],
+        $wdHost = 'http://localhost:4444/wd/hub',
+        $splitVideo = false
+    ) {
+        parent::__construct($browserName, $desiredCapabilities, $wdHost);
+        $this->splitVideo = $splitVideo;
+    }
+
+    public function isSplitVideo(): bool
+    {
+        return $this->splitVideo;
+    }
+
     public function setWebDriver(RemoteWebDriver $webDriver)
     {
         $this->webDriver = $webDriver;
@@ -49,10 +66,10 @@ final class LambdatestWebDriver extends \SilverStripe\MinkFacebookWebDriver\Face
         try {
             $this->webDriver->quit();
         } catch (InvalidSessionIdException $e) {
-            //Silent error because the session has a status and close is sufficent.
+            // Silent error because the session has a status and close is sufficent.
         } catch (UnrecognizedExceptionException $e) {
-            //Manage the Lambdatest 'session-not-found' error:
-            //Silent error (only if contains 'Unable to find the session') because the session has a status and close is sufficent.
+            // Manage the Lambdatest 'session-not-found' error:
+            // Silent error (only if contains 'Unable to find the session') because the session has a status and close is sufficent.
             if (strpos($e->getMessage(), 'Unable to find the session') === false) {
                 throw new DriverException('Unknow exception from sub driver', 400, $e);
             }
@@ -65,8 +82,9 @@ final class LambdatestWebDriver extends \SilverStripe\MinkFacebookWebDriver\Face
     {
         // Fix to mitigate the unsupported `displayed` command https://w3c.github.io/webdriver/#element-displayedness
         if (strtolower($this->getDesiredCapabilities()->getBrowserName()) === 'safari') {
-            return $this->evaluateScript("(function (){ let x =  document.evaluate(\"" . $xpath . "\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; if(x === null) {return false;} return window.getComputedStyle(x).display !== 'none';})();");
+            return $this->evaluateScript('(function (){ let x =  document.evaluate("'.$xpath."\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; if(x === null) {return false;} return window.getComputedStyle(x).display !== 'none';})();");
         }
+
         return parent::isVisible($xpath);
     }
 }
