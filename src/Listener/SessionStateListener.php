@@ -88,7 +88,7 @@ final class SessionStateListener implements EventSubscriberInterface
     public function beforeScenario(BeforeScenarioTested $event): void
     {
         $driver = $this->getMinkLambdatestSession();
-        if ($driver === null || $driver->isSplitVideo() === false) {
+        if ($driver === null || $driver->isRestartSessionBetweenScenario() === false) {
             return;
         }
         if (empty($this->originalTags)) {
@@ -113,7 +113,7 @@ final class SessionStateListener implements EventSubscriberInterface
     public function afterScenarioOrOutline(AfterTested $event): void
     {
         $driver = $this->getMinkLambdatestSession();
-        if ($driver === null || $driver->getWebDriver() === null || $driver->isSplitVideo() === false) {
+        if ($driver === null || $driver->getWebDriver() === null || $driver->isRestartSessionBetweenScenario() === false) {
             return;
         }
         $driver->executeScript('lambda-status='.($event->getTestResult()->isPassed() ? 'passed' : 'failed'));
@@ -127,7 +127,7 @@ final class SessionStateListener implements EventSubscriberInterface
     public function beforeOutline(BeforeOutlineTested $event): void
     {
         $driver = $this->getMinkLambdatestSession();
-        if ($driver === null || $driver->isSplitVideo() === false) {
+        if ($driver === null || $driver->isRestartSessionBetweenScenario() === false) {
             return;
         }
         if (empty($this->originalTags)) {

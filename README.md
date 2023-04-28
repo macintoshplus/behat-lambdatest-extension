@@ -36,11 +36,11 @@ default:
           # You can use the LT_USERNAME and LT_USERKEY environment variables instead of this keys:
           user: your_email@domain.tld # Your Lambdatest login
           key: xxxxx # Your Lambdatest key available here: https://accounts.lambdatest.com/detail/profile
-          split_video: false #If false, run all scenario in one session. If true, close and open a new session for each scenario
+          restart_session_between_scenario: false #If false, run all scenario in one session. If true, close and open a new session for each scenario
           # The rest of key are the same as Mink Extension
           wd_host: https://hub.lambdatest.com/wd/hub # The URL of Selenium2 Hub
           capabilities:
-              name: Behat test suite # Define the name to change the Lambdatest session name or prefix if `split_video` is true
+              name: Behat test suite # Define the name to change the Lambdatest session name or prefix if `restart_session_between_scenario` is true
               # The rest of key are the same as Mink Extension
               browser: firefox # The browser name
               marionette: true

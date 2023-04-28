@@ -27,7 +27,7 @@ final class LambdatestFactory extends FacebookFactory
         $builder->children()
             ->scalarNode('user')->end()
             ->scalarNode('key')->end()
-            ->booleanNode('split_video')->defaultFalse()->end()
+            ->booleanNode('restart_session_between_scenario')->defaultFalse()->end()
             ->end();
         parent::configure($builder);
     }
@@ -71,7 +71,7 @@ final class LambdatestFactory extends FacebookFactory
 
         $def = parent::buildDriver($config);
         $def->setClass(LambdatestWebDriver::class);
-        $def->setArgument(3, $config['split_video']);
+        $def->setArgument(3, $config['restart_session_between_scenario']);
         $capabilities = $def->getArgument(1);
 
         // Remove w3c option is no Chrome browser

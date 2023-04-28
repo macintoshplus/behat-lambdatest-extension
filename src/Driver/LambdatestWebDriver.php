@@ -8,33 +8,32 @@ use Behat\Mink\Exception\DriverException;
 use Facebook\WebDriver\Exception\InvalidSessionIdException;
 use Facebook\WebDriver\Exception\UnrecognizedExceptionException;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use SilverStripe\MinkFacebookWebDriver\FacebookWebDriver;
 
 /*
  * Override the WebDriver to add quit call on session stop.
  * Use the LambdatestWebDriver allow to set the test result on lambdatest.
  */
 
-final class LambdatestWebDriver extends \SilverStripe\MinkFacebookWebDriver\FacebookWebDriver
+final class LambdatestWebDriver extends FacebookWebDriver
 {
     protected $webDriver;
 
-    private $started = false;
-
-    private bool $splitVideo;
+    private bool $restartSessionBetweenScenario;
 
     public function __construct(
         $browserName = self::DEFAULT_BROWSER,
         $desiredCapabilities = [],
         $wdHost = 'http://localhost:4444/wd/hub',
-        $splitVideo = false
+        $restartSessionBetweenScenario = false
     ) {
         parent::__construct($browserName, $desiredCapabilities, $wdHost);
-        $this->splitVideo = $splitVideo;
+        $this->restartSessionBetweenScenario = $restartSessionBetweenScenario;
     }
 
-    public function isSplitVideo(): bool
+    public function isRestartSessionBetweenScenario(): bool
     {
-        return $this->splitVideo;
+        return $this->restartSessionBetweenScenario;
     }
 
     public function setWebDriver(RemoteWebDriver $webDriver)
